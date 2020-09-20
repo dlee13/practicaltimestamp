@@ -1,0 +1,20 @@
+[package]
+name = "practicaltimestamp"
+version = "0.1.0"
+authors = ["Derek Lee <derek.scott.lee13@gmail.com>"]
+edition = "2018"
+description = "For efficiently handling unix timestamps"
+readme = "README.md"
+repository = "https://github.com/dlee13/practicaltimestamp"
+license = "MIT"
+keywords = ["date", "time", "timestamp"]
+categories = ["date-and-time"]
+include = ["src/**/*", "LICENSE.md", "README.md"]
+
+[features]
+default = ["std"]
+std = []
+
+[dev-dependencies]
+criterion = "0.3"
+time = "0.2"
