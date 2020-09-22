@@ -77,41 +77,39 @@ impl Timestamp {
         }
     }
 
-    // Only valid for dates greater than or equal to 0000-3-1
+    // Only valid for dates greater than or equal to 0000-1-1
     // [section 2.2.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
     pub const fn from_year_month_day(year: u16, month: u8, day: u8) -> result::TimestampResult {
-        let (year, month, day) = if month < 3 {
-            (year as i32 - 1, month as i32 + 12, day as i32)
+        let (adj_year, adj_month, day) = if month < 3 {
+            (year as i32 + 399, month as i32 + 12, day as i32)
         } else {
-            (year as i32, month as i32, day as i32)
+            (year as i32 + 400, month as i32, day as i32)
         };
-        // f = (153 * month - 457) / 5
-        let f = (979 * month - 2_918) >> 5;
-        // Floor division would be needed instead to accurately calculate for dates before year 1
-        let julian_day_number = day + f + 365 * year + year / 4 - year / 100 + year / 400 + 1_721_119;
+        // f = (153 * adj_month - 457) / 5
+        let f = (979 * adj_month - 2_918) >> 5;
+        let julian_day_number = day + f + 365 * adj_year + adj_year / 4 - adj_year / 100 + adj_year / 400 + 1_575_022;
         Self::from_julian_day_number(julian_day_number)
     }
 
-    // Only valid for dates greater than or equal to 1721118.25 (April 28.75 of the year zero)
+    // Only valid for dates greater than or equal to 0000-1-1
     // [section 3.2.1/3.3.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
     pub const fn as_year_month_day(&self) -> (u16, u8, u8) {
-        let julian_day_number = self.julian_day_number() as u64;
-        let z = julian_day_number - 1_721_119;
+        let julian_day_number = self.julian_day_number() as u32;
+        let z = julian_day_number - 1_575_022;
         let h = 100 * z - 25;
-        // Floor division would be needed instead to accurately calculate for dates before year 1
         let a = h / 3_652_425;
         let b = a - a / 4;
-        let year = (100 * b + h) / 36_525;
-        let c = b + z - 365 * year - year / 4;
-        // month = (5 * c + 456) / 153
-        let month = (535 * c + 48_950) >> 14;
-        // f = (153 * month - 457) / 5
-        let f = (979 * month - 2_918) >> 5;
+        let adj_year = (100 * b + h) / 36_525;
+        let c = b + z - 365 * adj_year - adj_year / 4;
+        // adj_month = (5 * c + 456) / 153
+        let adj_month = (535 * c + 48_950) >> 14;
+        // f = (153 * adj_month - 457) / 5
+        let f = (979 * adj_month - 2_918) >> 5;
         let day = c - f;
-        let (year, month) = if month > 12 {
-            (year + 1, month - 12)
+        let (year, month) = if adj_month > 12 {
+            (adj_year - 399, adj_month - 12)
         } else {
-            (year, month)
+            (adj_year - 400, adj_month)
         };
         (year as u16, month as u8, day as u8)
     }
@@ -129,14 +127,13 @@ impl Timestamp {
     pub const fn from_year_ordinal(year: u16, ordinal: u16) -> result::TimestampResult {
         let ordinal = ordinal as u64;
         let last_day_of_february = 59 + util::is_leap_year(year) as u64;
+        // adj_month = (10 * adj_ordinal - 5) / 306
         let (adj_ordinal, adj_month, month) = if ordinal > last_day_of_february {
             let adj_ordinal = ordinal - last_day_of_february;
-            // adj_month = (10 * adj_ordinal - 5) / 306
             let adj_month = (1_071 * adj_ordinal - 535) >> 15;
             (adj_ordinal, adj_month, (adj_month + 3) as u8)
         } else {
             let adj_ordinal = ordinal + 306;
-            // adj_month = (10 * adj_ordinal - 5) / 306
             let adj_month = (1_071 * adj_ordinal - 535) >> 15;
             (adj_ordinal, adj_month, (adj_month - 9) as u8)
         };
