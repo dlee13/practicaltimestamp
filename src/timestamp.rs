@@ -3,7 +3,7 @@ use super::{
     util,
 };
 
-#[derive(Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
 pub struct Timestamp(i64);
 
 impl Timestamp {
