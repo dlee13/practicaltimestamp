@@ -1,6 +1,6 @@
 use super::Timestamp;
 
-pub const SECONDS_PER_DAY: usize = 86_400;
+pub const SECONDS_PER_DAY: i64 = 86_400;
 pub const UNIX_EPOCH_JULIAN_DAY_NUMBER: u32 = 2_440_588;
 
 // Maybe should make weekday into a newtype or enum

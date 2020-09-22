@@ -40,11 +40,11 @@ impl Timestamp {
     }
 
     pub const fn midnight(&self) -> Self {
-        Self::new(self.unix_timestamp() - self.seconds_since_midnight() as i64)
+        Self::new(self.unix_timestamp() - self.seconds_since_midnight())
     }
 
-    pub const fn seconds_since_midnight(&self) -> u64 {
-        self.unix_timestamp() as u64 % util::SECONDS_PER_DAY as u64
+    pub const fn seconds_since_midnight(&self) -> i64 {
+        (self.unix_timestamp() as u64 % util::SECONDS_PER_DAY as u64) as i64
     }
     
     pub const fn checked_add(&self, seconds: i64) -> Option<Self> {
@@ -164,16 +164,16 @@ impl Timestamp {
     }
 
     pub const fn from_julian_day_number(julian_day_number: u32) -> result::TimestampResult {
-        let timestamp = (julian_day_number as i64 - util::UNIX_EPOCH_JULIAN_DAY_NUMBER as i64) * util::SECONDS_PER_DAY as i64;
+        let timestamp = (julian_day_number as i64 - util::UNIX_EPOCH_JULIAN_DAY_NUMBER as i64) * util::SECONDS_PER_DAY;
         Self::from_unix_timestamp(timestamp)
     }
     
     pub const fn julian_day_number(&self) -> u32 {
-        (self.unix_timestamp() as usize / util::SECONDS_PER_DAY) as u32 + util::UNIX_EPOCH_JULIAN_DAY_NUMBER
+        (self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as u32 + util::UNIX_EPOCH_JULIAN_DAY_NUMBER
     }
 
     // This gives the weekday number where 0 represents Monday and 6 represents Sunday
     pub const fn number_days_from_monday(&self) -> u8 {
-        (((self.unix_timestamp() as usize / util::SECONDS_PER_DAY) as u32 + 3) % 7) as u8
+        (((self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as u32 + 3) % 7) as u8
     }
 }
