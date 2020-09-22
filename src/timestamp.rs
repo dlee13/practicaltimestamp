@@ -89,7 +89,7 @@ impl Timestamp {
         let f = (979 * month - 2_918) >> 5;
         // Floor division would be needed instead to accurately calculate for dates before year 1
         let julian_day_number = day + f + 365 * year + year / 4 - year / 100 + year / 400 + 1_721_119;
-        Self::from_julian_day_number(julian_day_number as u32)
+        Self::from_julian_day_number(julian_day_number)
     }
 
     // Only valid for dates greater than or equal to 1721118.25 (April 28.75 of the year zero)
@@ -125,10 +125,10 @@ impl Timestamp {
     }
 
     // I derived this algorithm based on the doy_from_month equation
-    // [Computing day-of-year from month and day-of-month](http://howardhinnant.github.io/date_algorithms.html#days_from_civil)
+    // [Computing day-of-year...](http://howardhinnant.github.io/date_algorithms.html#days_from_civil)
     pub const fn from_year_ordinal(year: u16, ordinal: u16) -> result::TimestampResult {
-        let ordinal = ordinal as u32;
-        let last_day_of_february = 59 + util::is_leap_year(year) as u32;
+        let ordinal = ordinal as u64;
+        let last_day_of_february = 59 + util::is_leap_year(year) as u64;
         let (adj_ordinal, adj_month, month) = if ordinal > last_day_of_february {
             let adj_ordinal = ordinal - last_day_of_february;
             // adj_month = (10 * adj_ordinal - 5) / 306
@@ -150,26 +150,26 @@ impl Timestamp {
     pub const fn as_year_ordinal(&self) -> (u16, u16) {
         let (year, month, day) = self.as_year_month_day();
         let (month, day) = (month as u64, day as u64);
-        // DayOfYear(adjusted_month) = (153 * adjusted_month + 2) / 5
+        // f = (306 * adj_month + 5) / 10
         let ordinal = if month >= 3 {
-            ((62_719 * (month - 3) + 769) >> 11) + day + 59 + util::is_leap_year(year) as u64
+            ((979 * (month - 3) + 16) >> 5) + day + 59 + util::is_leap_year(year) as u64
         } else {
-            ((62_719 * (month + 9) + 769) >> 11) + day - 306
+            ((979 * (month + 9) + 16) >> 5) + day - 306
         };
         (year, ordinal as u16)
     }
 
-    pub const fn checked_from_julian_day_number(julian_day_number: u32) -> Option<Self> {
+    pub const fn checked_from_julian_day_number(julian_day_number: i32) -> Option<Self> {
         Self::from_julian_day_number(julian_day_number).ok()
     }
 
-    pub const fn from_julian_day_number(julian_day_number: u32) -> result::TimestampResult {
+    pub const fn from_julian_day_number(julian_day_number: i32) -> result::TimestampResult {
         let timestamp = (julian_day_number as i64 - util::UNIX_EPOCH_JULIAN_DAY_NUMBER as i64) * util::SECONDS_PER_DAY;
         Self::from_unix_timestamp(timestamp)
     }
     
-    pub const fn julian_day_number(&self) -> u32 {
-        (self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as u32 + util::UNIX_EPOCH_JULIAN_DAY_NUMBER
+    pub const fn julian_day_number(&self) -> i32 {
+        (self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as i32 + util::UNIX_EPOCH_JULIAN_DAY_NUMBER
     }
 
     // This gives the weekday number where 0 represents Monday and 6 represents Sunday

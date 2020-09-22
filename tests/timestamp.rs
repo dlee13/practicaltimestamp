@@ -57,6 +57,8 @@ fn year_month_day() {
     }
     assert_eq!(Timestamp::checked_from_year_month_day(1969, 12, 31), None);
     assert_eq!(Timestamp::checked_from_year_month_day(10000, 1, 2), None);
+    assert_eq!(Timestamp::from_year_month_day(u16::MIN, u8::MIN, u8::MIN).unwrap(), Timestamp::MIN);
+    assert_eq!(Timestamp::from_year_month_day(u16::MAX, u8::MAX, u8::MAX).unwrap(), Timestamp::MAX);
 }
 
 #[test]
@@ -75,11 +77,13 @@ fn year_ordinal() {
     }
     assert_eq!(Timestamp::checked_from_year_ordinal(1969, 365), None);
     assert_eq!(Timestamp::checked_from_year_ordinal(10000, 2), None);
+    assert_eq!(Timestamp::from_year_ordinal(u16::MIN, u16::MIN).unwrap(), Timestamp::MIN);
+    assert_eq!(Timestamp::from_year_ordinal(u16::MAX, u16::MAX).unwrap(), Timestamp::MAX);
 }
 
 #[test]
 fn julian_day_number() {
-    const TEST_CASES: &[(u32, i64)] = &[
+    const TEST_CASES: &[(i32, i64)] = &[
         (2_440_588, 0),
         (2_459_130, 1_602_028_800),
         (2_459_131, 1_602_115_200),
@@ -93,6 +97,8 @@ fn julian_day_number() {
     }
     assert_eq!(Timestamp::checked_from_julian_day_number(2_440_587), None);
     assert_eq!(Timestamp::checked_from_julian_day_number(5_373_486), None);
+    assert_eq!(Timestamp::from_julian_day_number(i32::MIN).unwrap(), Timestamp::MIN);
+    assert_eq!(Timestamp::from_julian_day_number(i32::MAX).unwrap(), Timestamp::MAX);
 }
 
 #[test]
