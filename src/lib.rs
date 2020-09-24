@@ -5,4 +5,4 @@ pub mod util;
 #[cfg(feature = "std")]
 mod std_support;
 
-pub use timestamp::Timestamp;
+pub use self::timestamp::Timestamp;

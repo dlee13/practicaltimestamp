@@ -13,7 +13,7 @@ pub const SATURDAY: u8 = 5;
 pub const SUNDAY: u8 = 6;
 
 // 1/1/1970 @ 12:00:00AM UTC to 1/1/10000 @ 12:00:00AM UTC
-pub const fn is_timestamp_in_supported_range(timestamp: i64) -> bool {
+pub(super) const fn is_supported_unix_timestamp(timestamp: i64) -> bool {
     timestamp as u64 <= Timestamp::MAX.unix_timestamp() as u64
 }
 

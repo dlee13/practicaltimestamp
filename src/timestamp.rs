@@ -28,7 +28,7 @@ impl Timestamp {
     }
 
     pub const fn from_unix_timestamp(timestamp: i64) -> result::TimestampResult {
-        if util::is_timestamp_in_supported_range(timestamp) {
+        if util::is_supported_unix_timestamp(timestamp) {
             result::TimestampResult::TimestampOk(Self::new(timestamp))
         } else {
             result::TimestampResult::OverflowErr(timestamp)
