@@ -171,6 +171,8 @@ impl Timestamp {
 
     // This gives the weekday number where 0 represents Monday and 6 represents Sunday
     pub const fn number_days_from_monday(&self) -> u8 {
-        (((self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as u32 + 3) % 7) as u8
+        // (days_since_epoch + 3) % 7
+        let adj_days = self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64 + 3;
+        (adj_days - (((adj_days * 613_566_757) >> 32) * 7)) as u8
     }
 }
