@@ -1,12 +1,12 @@
 use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
-use practicaltimestamp::Timestamp;
+use practicaltimestamp::UnixTimestamp;
 
-const BENCH_CASES: &[Timestamp] = &[
-    Timestamp::MIN,
-    Timestamp::from_year_month_day(2018, 6, 2).unwrap(),
-    Timestamp::from_year_month_day(2019, 4, 13).unwrap(),
-    Timestamp::from_year_month_day(2020, 9, 13).unwrap(),
-    Timestamp::MAX,
+const BENCH_CASES: &[UnixTimestamp] = &[
+    UnixTimestamp::MIN,
+    UnixTimestamp::from_year_month_day(2018, 6, 2).unwrap(),
+    UnixTimestamp::from_year_month_day(2019, 4, 13).unwrap(),
+    UnixTimestamp::from_year_month_day(2020, 9, 13).unwrap(),
+    UnixTimestamp::MAX,
 ];
 
 fn from_year_month_day(c: &mut Criterion) {
@@ -14,7 +14,7 @@ fn from_year_month_day(c: &mut Criterion) {
     for &ts in BENCH_CASES {
         let (y, m, d) = ts.as_year_month_day();
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &(y, m, d), |b, &(y, m, d)| {
-            b.iter(|| Timestamp::from_year_month_day(y, m, d).unwrap());
+            b.iter(|| UnixTimestamp::from_year_month_day(y, m, d).unwrap());
         });
     }
     group.finish();
@@ -35,7 +35,7 @@ fn from_year_ordinal(c: &mut Criterion) {
     for &ts in BENCH_CASES {
         let (y, o) = ts.as_year_ordinal();
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &(y, o), |b, &(y, o)| {
-            b.iter(|| Timestamp::from_year_ordinal(y, o).unwrap());
+            b.iter(|| UnixTimestamp::from_year_ordinal(y, o).unwrap());
         });
     }
     group.finish();
@@ -56,7 +56,7 @@ fn from_julian_day_number(c: &mut Criterion) {
     for &ts in BENCH_CASES {
         let jdn = ts.julian_day_number();
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &jdn, |b, &jdn| {
-            b.iter(|| Timestamp::from_julian_day_number(jdn).unwrap());
+            b.iter(|| UnixTimestamp::from_julian_day_number(jdn).unwrap());
         });
     }
     group.finish();

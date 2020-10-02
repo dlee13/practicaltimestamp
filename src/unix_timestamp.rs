@@ -4,11 +4,11 @@ use super::{
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, PartialOrd)]
-pub struct Timestamp(i64);
+pub struct UnixTimestamp(i64);
 
-impl Timestamp {
-    pub const MIN: Timestamp = Self::new(0);
-    pub const MAX: Timestamp = Self::new(253_402_300_800);
+impl UnixTimestamp {
+    pub const MIN: UnixTimestamp = Self::new(0);
+    pub const MAX: UnixTimestamp = Self::new(253_402_300_800);
 
     const fn new(value: i64) -> Self {
         Self(value)
