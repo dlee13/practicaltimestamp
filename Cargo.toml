@@ -16,5 +16,10 @@ default = ["std"]
 std = []
 
 [dev-dependencies]
-#criterion = "0.3"
+criterion = "0.3"
+#rand = "0.7"
 #time = "0.2"
+
+[[bench]]
+name = "timestamp"
+harness = false
