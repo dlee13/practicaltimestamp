@@ -14,7 +14,7 @@ impl UnixTimestamp {
         Self(value)
     }
 
-    const fn value(&self) -> i64 {
+    const fn value(self) -> i64 {
         self.0
     }
 
@@ -35,36 +35,36 @@ impl UnixTimestamp {
         }
     }
 
-    pub const fn unix_timestamp(&self) -> i64 {
+    pub const fn unix_timestamp(self) -> i64 {
         self.value()
     }
 
-    pub const fn midnight(&self) -> Self {
+    pub const fn midnight(self) -> Self {
         Self::new(self.unix_timestamp() - self.seconds_since_midnight())
     }
 
-    pub const fn seconds_since_midnight(&self) -> i64 {
+    pub const fn seconds_since_midnight(self) -> i64 {
         (self.unix_timestamp() as u64 % util::SECONDS_PER_DAY as u64) as i64
     }
     
-    pub const fn checked_add(&self, seconds: i64) -> Option<Self> {
+    pub const fn checked_add(self, seconds: i64) -> Option<Self> {
         let timestamp = self.unix_timestamp().wrapping_add(seconds);
         Self::checked_from_unix_timestamp(timestamp)
     }
 
-    pub const fn checked_sub(&self, seconds: i64) -> Option<Self> {
+    pub const fn checked_sub(self, seconds: i64) -> Option<Self> {
         let timestamp = self.unix_timestamp().wrapping_sub(seconds);
         Self::checked_from_unix_timestamp(timestamp)
     }
 
     // const in 1.47
-    pub fn saturating_add(&self, seconds: i64) -> Self {
+    pub fn saturating_add(self, seconds: i64) -> Self {
         let timestamp = self.unix_timestamp().saturating_add(seconds); // MSRV 1.47
         Self::from_unix_timestamp(timestamp).unwrap()
     }
 
     // const in 1.47
-    pub fn saturating_sub(&self, seconds: i64) -> Self {
+    pub fn saturating_sub(self, seconds: i64) -> Self {
         let timestamp = self.unix_timestamp().saturating_sub(seconds); // MSRV 1.47
         Self::from_unix_timestamp(timestamp).unwrap()
     }
@@ -93,7 +93,7 @@ impl UnixTimestamp {
 
     // Only valid for dates greater than or equal to 0000-1-1
     // [section 3.2.1/3.3.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
-    pub const fn as_year_month_day(&self) -> (u16, u8, u8) {
+    pub const fn as_year_month_day(self) -> (u16, u8, u8) {
         let julian_day_number = self.julian_day_number() as u32;
         let z = julian_day_number - 1_575_022;
         let h = 100 * z - 25;
@@ -144,7 +144,7 @@ impl UnixTimestamp {
     }
 
     // [Eliminating the Lookup Table](https://blog.reverberate.org/2020/05/12/optimizing-date-algorithms.html)
-    pub const fn as_year_ordinal(&self) -> (u16, u16) {
+    pub const fn as_year_ordinal(self) -> (u16, u16) {
         let (year, month, day) = self.as_year_month_day();
         let (month, day) = (month as u64, day as u64);
         // f = (306 * adj_month + 5) / 10
@@ -165,11 +165,11 @@ impl UnixTimestamp {
         Self::from_unix_timestamp(timestamp)
     }
     
-    pub const fn julian_day_number(&self) -> i32 {
+    pub const fn julian_day_number(self) -> i32 {
         (self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64) as i32 + util::UNIX_EPOCH_JULIAN_DAY_NUMBER
     }
 
-    pub const fn weekday(&self) -> util::Weekday {
+    pub const fn weekday(self) -> util::Weekday {
         // (days_since_epoch + 3) % 7
         let adj_days = self.unix_timestamp() as u64 / util::SECONDS_PER_DAY as u64 + 3;
         let wd = adj_days - (((adj_days * 613_566_757) >> 32) * 7);
