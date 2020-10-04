@@ -1,16 +1,8 @@
 use super::UnixTimestamp;
+pub use super::weekday::Weekday;
 
 pub const SECONDS_PER_DAY: i64 = 86_400;
 pub const UNIX_EPOCH_JULIAN_DAY_NUMBER: i32 = 2_440_588;
-
-// Maybe should make weekday into a newtype or enum
-pub const MONDAY: u8 = 0;
-pub const TUESDAY: u8 = 1;
-pub const WEDNESDAY: u8 = 2;
-pub const THURSDAY: u8 = 3;
-pub const FRIDAY: u8 = 4;
-pub const SATURDAY: u8 = 5;
-pub const SUNDAY: u8 = 6;
 
 // 1/1/1970 @ 12:00:00AM UTC to 1/1/10000 @ 12:00:00AM UTC
 pub(super) const fn is_supported_unix_timestamp(timestamp: i64) -> bool {

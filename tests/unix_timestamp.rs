@@ -102,16 +102,16 @@ fn julian_day_number() {
 }
 
 #[test]
-fn number_days_from_monday() {
-    const TEST_CASES: &[(i64, u8)] = &[
-        (0, util::THURSDAY),
-        (1_602_028_800, util::WEDNESDAY),
-        (1_602_115_200, util::THURSDAY),
-        (1_602_201_600, util::FRIDAY),
-        (253_402_300_800, util::SATURDAY),
+fn weekday() {
+    const TEST_CASES: &[(i64, util::Weekday)] = &[
+        (0, util::Weekday::THURSDAY),
+        (1_602_028_800, util::Weekday::WEDNESDAY),
+        (1_602_115_200, util::Weekday::THURSDAY),
+        (1_602_201_600, util::Weekday::FRIDAY),
+        (253_402_300_800, util::Weekday::SATURDAY),
     ];
 
     for &(ut, wd) in TEST_CASES {
-        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().number_days_from_monday(), wd);
+        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().weekday(), wd);
     }
 }

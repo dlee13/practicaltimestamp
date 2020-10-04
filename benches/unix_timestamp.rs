@@ -72,11 +72,11 @@ fn julian_day_number(c: &mut Criterion) {
     group.finish();
 }
 
-fn number_days_from_monday(c: &mut Criterion) {
-    let mut group = c.benchmark_group("number_days_from_monday");
+fn weekday(c: &mut Criterion) {
+    let mut group = c.benchmark_group("weekday");
     for &ts in BENCH_CASES {
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &ts, |b, &ts| {
-            b.iter(|| ts.number_days_from_monday());
+            b.iter(|| ts.weekday());
         });
     }
     group.finish();
@@ -87,6 +87,6 @@ criterion_group!(
     from_year_month_day, as_year_month_day,
     from_year_ordinal, as_year_ordinal,
     from_julian_day_number, julian_day_number,
-    number_days_from_monday,
+    weekday,
 );
 criterion_main!(benches);
