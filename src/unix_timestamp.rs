@@ -14,10 +14,6 @@ impl UnixTimestamp {
         Self(value)
     }
 
-    const fn value(self) -> i64 {
-        self.0
-    }
-
     #[cfg(feature = "std")]
     pub fn now() -> Self {
         super::std_support::system_time_now()
@@ -36,7 +32,7 @@ impl UnixTimestamp {
     }
 
     pub const fn unix_timestamp(self) -> i64 {
-        self.value()
+        self.0
     }
 
     pub const fn midnight(self) -> Self {
