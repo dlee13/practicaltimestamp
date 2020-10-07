@@ -12,7 +12,7 @@ const BENCH_CASES: &[UnixTimestamp] = &[
 fn from_year_month_day(c: &mut Criterion) {
     let mut group = c.benchmark_group("from_year_month_day");
     for &ts in BENCH_CASES {
-        let (y, m, d) = ts.as_year_month_day();
+        let (y, m, d) = ts.to_year_month_day();
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &(y, m, d), |b, &(y, m, d)| {
             b.iter(|| UnixTimestamp::from_year_month_day(y, m, d).unwrap());
         });
@@ -20,11 +20,11 @@ fn from_year_month_day(c: &mut Criterion) {
     group.finish();
 }
 
-fn as_year_month_day(c: &mut Criterion) {
+fn to_year_month_day(c: &mut Criterion) {
     let mut group = c.benchmark_group("as_year_month_day");
     for &ts in BENCH_CASES {
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &ts, |b, &ts| {
-            b.iter(|| ts.as_year_month_day());
+            b.iter(|| ts.to_year_month_day());
         });
     }
     group.finish();
@@ -33,7 +33,7 @@ fn as_year_month_day(c: &mut Criterion) {
 fn from_year_ordinal(c: &mut Criterion) {
     let mut group = c.benchmark_group("from_year_ordinal");
     for &ts in BENCH_CASES {
-        let (y, o) = ts.as_year_ordinal();
+        let (y, o) = ts.to_year_ordinal();
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &(y, o), |b, &(y, o)| {
             b.iter(|| UnixTimestamp::from_year_ordinal(y, o).unwrap());
         });
@@ -41,11 +41,11 @@ fn from_year_ordinal(c: &mut Criterion) {
     group.finish();
 }
 
-fn as_year_ordinal(c: &mut Criterion) {
+fn to_year_ordinal(c: &mut Criterion) {
     let mut group = c.benchmark_group("as_year_ordinal");
     for &ts in BENCH_CASES {
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &ts, |b, &ts| {
-            b.iter(|| ts.as_year_ordinal());
+            b.iter(|| ts.to_year_ordinal());
         });
     }
     group.finish();
@@ -84,8 +84,8 @@ fn weekday(c: &mut Criterion) {
 
 criterion_group!(
     benches,
-    from_year_month_day, as_year_month_day,
-    from_year_ordinal, as_year_ordinal,
+    from_year_month_day, to_year_month_day,
+    from_year_ordinal, to_year_ordinal,
     from_julian_day_number, julian_day_number,
     weekday,
 );

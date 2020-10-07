@@ -53,7 +53,7 @@ fn year_month_day() {
 
     for &((y, m, d), ut) in TEST_CASES {
         assert_eq!(UnixTimestamp::from_year_month_day(y, m, d).unwrap().unix_timestamp(), ut);
-        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().as_year_month_day(), (y, m, d));
+        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().to_year_month_day(), (y, m, d));
     }
     assert_eq!(UnixTimestamp::checked_from_year_month_day(1969, 12, 31), None);
     assert_eq!(UnixTimestamp::checked_from_year_month_day(10000, 1, 2), None);
@@ -73,7 +73,7 @@ fn year_ordinal() {
 
     for &((y, o), ut) in TEST_CASES {
         assert_eq!(UnixTimestamp::from_year_ordinal(y, o).unwrap().unix_timestamp(), ut);
-        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().as_year_ordinal(), (y, o));
+        assert_eq!(UnixTimestamp::from_unix_timestamp(ut).unwrap().to_year_ordinal(), (y, o));
     }
     assert_eq!(UnixTimestamp::checked_from_year_ordinal(1969, 365), None);
     assert_eq!(UnixTimestamp::checked_from_year_ordinal(10000, 2), None);

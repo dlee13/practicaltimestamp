@@ -89,7 +89,7 @@ impl UnixTimestamp {
 
     // Only valid for dates greater than or equal to 0000-1-1
     // [section 3.2.1/3.3.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
-    pub const fn as_year_month_day(self) -> (u16, u8, u8) {
+    pub const fn to_year_month_day(self) -> (u16, u8, u8) {
         let julian_day_number = self.julian_day_number() as u32;
         let z = julian_day_number - 1_575_022;
         let h = 100 * z - 25;
@@ -140,8 +140,8 @@ impl UnixTimestamp {
     }
 
     // [Eliminating the Lookup Table](https://blog.reverberate.org/2020/05/12/optimizing-date-algorithms.html)
-    pub const fn as_year_ordinal(self) -> (u16, u16) {
-        let (year, month, day) = self.as_year_month_day();
+    pub const fn to_year_ordinal(self) -> (u16, u16) {
+        let (year, month, day) = self.to_year_month_day();
         let (month, day) = (month as u64, day as u64);
         // f = (306 * adj_month + 5) / 10
         let ordinal = if month >= 3 {
