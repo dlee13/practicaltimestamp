@@ -53,14 +53,12 @@ impl UnixTimestamp {
         Self::checked_from_unix_timestamp(timestamp)
     }
 
-    // const in 1.47
-    pub fn saturating_add(self, seconds: i64) -> Self {
+    pub const fn saturating_add(self, seconds: i64) -> Self {
         let timestamp = self.unix_timestamp().saturating_add(seconds); // MSRV 1.47
         Self::from_unix_timestamp(timestamp).unwrap()
     }
 
-    // const in 1.47
-    pub fn saturating_sub(self, seconds: i64) -> Self {
+    pub const fn saturating_sub(self, seconds: i64) -> Self {
         let timestamp = self.unix_timestamp().saturating_sub(seconds); // MSRV 1.47
         Self::from_unix_timestamp(timestamp).unwrap()
     }
