@@ -21,7 +21,7 @@ fn from_year_month_day(c: &mut Criterion) {
 }
 
 fn to_year_month_day(c: &mut Criterion) {
-    let mut group = c.benchmark_group("as_year_month_day");
+    let mut group = c.benchmark_group("to_year_month_day");
     for &ts in BENCH_CASES {
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &ts, |b, &ts| {
             b.iter(|| ts.to_year_month_day());
@@ -42,7 +42,7 @@ fn from_year_ordinal(c: &mut Criterion) {
 }
 
 fn to_year_ordinal(c: &mut Criterion) {
-    let mut group = c.benchmark_group("as_year_ordinal");
+    let mut group = c.benchmark_group("to_year_ordinal");
     for &ts in BENCH_CASES {
         group.bench_with_input(BenchmarkId::from_parameter(ts.unix_timestamp()), &ts, |b, &ts| {
             b.iter(|| ts.to_year_ordinal());
