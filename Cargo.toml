@@ -9,7 +9,7 @@ repository = "https://github.com/dlee13/practicaltimestamp"
 license = "MIT"
 keywords = ["date", "time", "timestamp"]
 categories = ["date-and-time", "no-std"]
-include = ["src/**/*", "LICENSE.md", "README.md"]
+include = ["src/**/*", "CHANGELOG.md", "LICENSE.md", "README.md"]
 
 [features]
 default = ["std"]
