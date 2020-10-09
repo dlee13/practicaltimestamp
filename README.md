@@ -8,7 +8,7 @@ Subseconds are not used and timezones are not considered, but support for these 
 
 ### Features
 
-The only feature is `std` library support. It is enabled by default, and it allows for converting between `UnixTimestamp` and `std::time::SystemTime` types. The api is mostly compatible with `#![no_std]` as the only thing requiring the `std` library is `Timestamp::now()`. The `std` feature can be disabled by specifying `default-features = false` in your dependencies.
+The only feature is `std` library support. It is enabled by default, and it allows for converting between `UnixTimestamp` and `std::time::SystemTime` types. The api is mostly compatible with `#![no_std]` as the only thing requiring the `std` library is `UnixTimestamp::now()`. The `std` feature can be disabled by specifying `default-features = false` in your dependencies.
 
 ## License
 
