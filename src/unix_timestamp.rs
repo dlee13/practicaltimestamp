@@ -71,7 +71,7 @@ impl UnixTimestamp {
         }
     }
 
-    // Only valid for dates greater than or equal to 0000-1-1
+    // Only valid for dates after the year 0 defined by ISO 8601
     // [section 2.2.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
     pub const fn from_year_month_day(year: u16, month: u8, day: u8) -> result::TimestampResult {
         let (adj_year, adj_month, day) = if month < 3 {
@@ -85,7 +85,7 @@ impl UnixTimestamp {
         Self::from_julian_day_number(julian_day_number)
     }
 
-    // Only valid for dates greater than or equal to 0000-1-1
+    // Only valid for dates after the year 0 defined by ISO 8601
     // [section 3.2.1/3.3.1](https://www.researchgate.net/publication/316558298_Date_Algorithms)
     pub const fn to_year_month_day(self) -> (u16, u8, u8) {
         let julian_day_number = self.julian_day_number() as u32;
@@ -116,27 +116,21 @@ impl UnixTimestamp {
         }
     }
 
-    // I derived this algorithm based on the doy_from_month equation
-    // [Computing day-of-year...](http://howardhinnant.github.io/date_algorithms.html#days_from_civil)
+    // Only valid for dates after the year 0 defined by ISO 8601
+    // This algorithm is based on the implementation of `from_year_month_day`
     pub const fn from_year_ordinal(year: u16, ordinal: u16) -> result::TimestampResult {
-        let ordinal = ordinal as u64;
-        let last_day_of_february = 59 + util::is_leap_year(year) as u64;
-        // adj_month = (10 * adj_ordinal - 5) / 306
-        let (adj_ordinal, adj_month, month) = if ordinal > last_day_of_february {
-            let adj_ordinal = ordinal - last_day_of_february;
-            let adj_month = (1_071 * adj_ordinal - 535) >> 15;
-            (adj_ordinal, adj_month, (adj_month + 3) as u8)
+        let ordinal = ordinal as i32;
+        let february_cumulative_days = 59 + util::is_leap_year(year) as i32;
+        let (adj_year, adj_ordinal) = if ordinal > february_cumulative_days {
+            (year as i32 + 400, ordinal - february_cumulative_days)
         } else {
-            let adj_ordinal = ordinal + 306;
-            let adj_month = (1_071 * adj_ordinal - 535) >> 15;
-            (adj_ordinal, adj_month, (adj_month - 9) as u8)
+            (year as i32 + 399, ordinal + 306)
         };
-        // f = (306 * adj_month + 5) / 10
-        let f = (979 * adj_month + 16) >> 5;
-        let day = adj_ordinal - f;
-        Self::from_year_month_day(year, month, day as u8)
+        let julian_day_number = adj_ordinal + 365 * adj_year + adj_year / 4 - adj_year / 100 + adj_year / 400 + 1_575_022;
+        Self::from_julian_day_number(julian_day_number)
     }
 
+    // Only valid for dates after the year 0 defined by ISO 8601
     // [Eliminating the Lookup Table](https://blog.reverberate.org/2020/05/12/optimizing-date-algorithms.html)
     pub const fn to_year_ordinal(self) -> (u16, u16) {
         let (year, month, day) = self.to_year_month_day();
